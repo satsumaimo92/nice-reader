@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.satsumaimo.nice-reader</string>
+
+    <!-- kanpo-bot と同じ理由で、/Volumes 上のスクリプトは起動ボリュームの /bin/bash に読ませる。
+         WorkingDirectory は指定しない（cd はスクリプト側）。 -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Volumes/sat_SSD/manga/nice/nice4/reader/update.sh</string>
+    </array>
+
+    <key>StandardOutPath</key>
+    <string>/Users/shigefumikobayashi/Library/Logs/nice-reader.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/shigefumikobayashi/Library/Logs/nice-reader.err.log</string>
+
+    <!-- 新都社の更新は多くが午前、遅いと22時台。その日のうちに拾えるよう23:30に回す。
+         スリープ中に時刻を過ぎた場合は、復帰時に1度だけ実行される。 -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>23</integer>
+        <key>Minute</key>
+        <integer>30</integer>
+    </dict>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>HOME</key>
+        <string>/Users/shigefumikobayashi</string>
+        <key>PATH</key>
+        <string>/Users/shigefumikobayashi/.local/bin:/usr/bin:/bin</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>

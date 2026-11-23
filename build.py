@@ -40,6 +40,13 @@ def strip_src(n: int) -> Path:
     raise FileNotFoundError(f'strip {n}')
 
 
+def strip_src_ok(n: int) -> bool:
+    try:
+        return strip_src(n).exists()
+    except FileNotFoundError:
+        return False
+
+
 def panel1_src(n: int) -> Path:
     if n >= 501:
         return NICE4 / 'latest' / 'panels' / f'nice_{n:04d}_1.png'
@@ -93,11 +100,25 @@ def main() -> None:
     args = ap.parse_args()
 
     ups = neetsha_updates()
-    latest = ups[0] if ups else None
-    published = args.max or (latest['to'] if latest else 0)
+    published = args.max or (ups[0]['to'] if ups else 0)
     if not published:
         raise SystemExit('公開済みの最終話が分からない')
-    if latest is None or latest['to'] != published:
+
+    # 自動実行の安全策: 手元に素材がまだ無い話(未書き出し)は出さない
+    avail = 0
+    while avail < published and strip_src_ok(avail + 1):
+        avail += 1
+    if avail < published:
+        print(f'素材が {avail} 話までしか無いので、公開範囲を {published} → {avail} に止める')
+        published = avail
+    # 新都社の読み取り失敗などで公開範囲が後退しないようにする(--max 指定時を除く)
+    prev = json.loads((SITE / 'data.json').read_text()) if (SITE / 'data.json').exists() else {}
+    if not args.max and published < prev.get('published', 0):
+        print(f'公開範囲が前回 {prev["published"]} より小さい({published})ので、何もしない')
+        return
+
+    latest = next((u for u in ups if u['to'] == published), None)
+    if latest is None:
         latest = {'from': max(1, published - 7), 'to': published, 'date': ''}
 
     (SITE / 'strips').mkdir(parents=True, exist_ok=True)
@@ -111,9 +132,11 @@ def main() -> None:
         'published': published,
         'chunk': CHUNK,
         'latest': {'from': latest['from'], 'to': latest['to'], 'date': latest['date'].replace('-', '.')},
-        'built': dt.datetime.now().isoformat(timespec='seconds'),
     }
-    (SITE / 'data.json').write_text(json.dumps(data, ensure_ascii=False))
+    # 中身が変わったときだけ書く(毎晩の実行で無駄なコミットを作らない)
+    if {k: prev.get(k) for k in data} != data:
+        data['built'] = dt.datetime.now().isoformat(timespec='seconds')
+        (SITE / 'data.json').write_text(json.dumps(data, ensure_ascii=False))
     print(f'published={published} latest={latest} new files={len(done)}')
 
 

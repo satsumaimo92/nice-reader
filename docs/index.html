@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>4コマ漫画 ナイス 第4部 | satsumaimo</title>
+<meta name="description" content="satsumaimo の4コマ漫画「ナイス」第4部（2022.4〜）のバックナンバー。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #111; --sub: #555; --line: #e6e6e6; --bg: #fff; }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: Lato, 'Noto Sans JP', sans-serif; }
+  a { color: var(--ink); }
+  button { font: inherit; color: inherit; }
+  [hidden] { display: none !important; }
+
+  /* サイト共通ヘッダ */
+  .site-head { max-width: 1180px; margin: 0 auto; height: 72px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .logo { font-size: 22px; font-weight: 700; text-decoration: none; letter-spacing: .02em; }
+  .site-nav { display: flex; gap: 22px; font-size: 15px; }
+  .site-nav a { text-decoration: none; }
+  .menu { display: none; }
+  @media (max-width: 640px) { .site-nav { display: none; } .menu { display: flex; } }
+  body.reading .site-head { display: none; }
+
+  /* 一覧 */
+  .list { max-width: 1000px; margin: 0 auto; padding: 24px 16px 80px; }
+  .intro { text-align: center; padding: 16px 0 32px; }
+  .intro h1 { margin: 0 0 6px; font-size: 20px; }
+  .intro a { font-size: 13px; }
+  .part { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 16px; }
+  .part h2 { margin: 0; font-size: 16px; }
+  .part span { font-size: 13px; color: var(--sub); }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 10px; }
+  @media (min-width: 720px) { .grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); grid-auto-flow: row dense; gap: 28px 16px; } }
+  .card { display: flex; flex-direction: column; gap: 6px; text-decoration: none; }
+  .card img { width: 100%; aspect-ratio: 1.47; object-fit: cover; display: block; border-radius: 4px; background: #f3f3f3; }
+  .card .label { font-size: 13px; font-weight: 700; letter-spacing: .02em; }
+  .card.latest { grid-column: span 2; }
+  @media (min-width: 720px) { .card.latest { grid-row: span 2; } }
+  .card.latest .label { display: flex; justify-content: space-between; align-items: baseline; font-size: 16px; }
+  .card.latest .label small { font-size: 13px; font-weight: 400; color: var(--sub); }
+  .card:hover img { opacity: .85; }
+
+  /* 読むビュー */
+  .reader { min-height: 100vh; padding-bottom: 120px; }
+  .bar { position: sticky; top: 0; z-index: 2; background: rgba(255,255,255,.94); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .bar-in { max-width: 1000px; margin: 0 auto; height: 52px; padding: 0 4px; display: grid; grid-template-columns: 52px 1fr 52px; align-items: center; }
+  .icon-btn { width: 44px; height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 22px; text-decoration: none; }
+  .num { text-align: center; font-size: 14px; font-weight: 700; letter-spacing: .04em; }
+  .prog { height: 2px; background: #eee; display: flex; justify-content: flex-end; margin: 0 16px; }
+  .prog i { display: block; height: 2px; background: var(--ink); transition: width .2s; }
+  @media (min-width: 720px) { .prog { width: 160px; margin: 0 auto; } }
+  .page { display: flex; justify-content: center; padding: 20px 16px 0; touch-action: pan-y; }
+  .page img { width: 100%; max-width: 480px; height: auto; aspect-ratio: 800 / 2130; display: block; background: #fafafa; }
+  .page img.ready { aspect-ratio: auto; background: none; }
+  .flip { position: fixed; left: 0; right: 0; bottom: 0; z-index: 2; padding: 0 16px calc(14px + env(safe-area-inset-bottom)); height: calc(88px + env(safe-area-inset-bottom)); display: flex; justify-content: space-between; align-items: center; background: linear-gradient(rgba(255,255,255,0), #fff 45%); pointer-events: none; }
+  .flip button { pointer-events: auto; width: 56px; height: 56px; border-radius: 28px; border: 1px solid #ddd; background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .flip button:disabled { opacity: .3; cursor: default; }
+  @media (min-width: 720px) {
+    .flip { top: 0; bottom: 0; height: auto; padding: 0; background: none; max-width: 760px; margin: 0 auto; }
+    .flip button { width: 64px; height: 64px; border-radius: 32px; }
+  }
+</style>
+</head>
+<body>
+<header class="site-head">
+  <a class="logo" href="https://satsumaimo.org/">satsumaimo</a>
+  <nav class="site-nav" aria-label="サイト">
+    <a href="https://satsumaimo.org/sakkyoku">Sakkyoku</a>
+    <a href="https://satsumaimo.org/manga">Manga</a>
+    <a href="https://satsumaimo.org/bunsyou">Bunsyou</a>
+    <a href="https://satsumaimo.org/contact">Contact</a>
+  </nav>
+  <a class="menu icon-btn" href="https://satsumaimo.org/manga" aria-label="Manga">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" aria-hidden="true"><path d="M3 8h18M3 16h18"/></svg>
+  </a>
+</header>
+
+<main id="list" class="list">
+  <div class="intro">
+    <h1>4コマ漫画 ナイス</h1>
+    <a href="https://neetsha.jp/inside/main.php?magazine=1">@新都社</a>
+  </div>
+  <div class="part"><h2>第4部</h2><span>2022.4〜</span></div>
+  <div id="grid" class="grid"></div>
+</main>
+
+<section id="reader" class="reader" hidden aria-label="読む">
+  <div class="bar">
+    <div class="bar-in">
+      <button id="close" class="icon-btn" aria-label="一覧に戻る">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <div id="num" class="num"></div>
+      <span></span>
+    </div>
+    <div class="prog"><i id="prog"></i></div>
+  </div>
+  <div id="page" class="page"><img id="strip" alt=""></div>
+  <nav class="flip" aria-label="前後の話">
+    <button id="next" aria-label="次の話">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <button id="prev" aria-label="前の話">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+  </nav>
+</section>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const pad = (n) => String(n).padStart(4, '0');
+  const stripUrl = (n) => 'strips/' + pad(n) + '.webp';
+  const coverUrl = (n) => 'covers/' + pad(n) + '.webp';
+  let D = null;          // data.json
+  let cur = 0;           // 表示中の話。0 = 一覧
+  let listY = 0;         // 一覧に戻ったときのスクロール位置
+
+  function card(href, img, alt, labelHtml, cls) {
+    const a = document.createElement('a');
+    a.className = 'card' + (cls ? ' ' + cls : '');
+    a.href = href;
+    a.innerHTML = '<img loading="lazy" decoding="async" alt="' + alt + '" src="' + img + '"><span class="label">' + labelHtml + '</span>';
+    return a;
+  }
+
+  function renderList() {
+    const g = $('grid');
+    g.textContent = '';
+    const L = D.latest;
+    g.appendChild(card('#' + L.from, coverUrl(L.from), '最新 ' + L.from + '–' + L.to + '話',
+      '<span>最新 ' + L.from + '–' + L.to + '</span>' + (L.date ? '<small>' + L.date + '</small>' : ''), 'latest'));
+    const last = Math.floor((D.published - 1) / D.chunk) * D.chunk + 1;
+    for (let s = last; s >= 1; s -= D.chunk) {
+      const e = Math.min(s + D.chunk - 1, D.published);
+      g.appendChild(card('#' + s, coverUrl(s), s + '–' + e + '話', s + '–' + e));
+    }
+  }
+
+  function preload(n) {
+    if (n >= 1 && n <= D.published) { const i = new Image(); i.src = stripUrl(n); }
+  }
+
+  function show(n) {
+    if (!n) {
+      cur = 0;
+      document.body.classList.remove('reading');
+      $('reader').hidden = true;
+      $('list').hidden = false;
+      document.title = '4コマ漫画 ナイス 第4部 | satsumaimo';
+      window.scrollTo(0, listY);
+      return;
+    }
+    n = Math.max(1, Math.min(D.published, n));
+    if (!cur) listY = window.scrollY;
+    cur = n;
+    document.body.classList.add('reading');
+    $('list').hidden = true;
+    $('reader').hidden = false;
+    const img = $('strip');
+    img.classList.remove('ready');
+    img.onload = () => img.classList.add('ready');
+    img.src = stripUrl(n);
+    img.alt = '第' + n + '話';
+    $('num').textContent = n;
+    const s = Math.floor((n - 1) / D.chunk) * D.chunk + 1;
+    const size = Math.min(D.chunk, D.published - s + 1);
+    $('prog').style.width = ((n - s + 1) / size * 100) + '%';
+    $('next').disabled = n >= D.published;
+    $('prev').disabled = n <= 1;
+    document.title = '第' + n + '話 | 4コマ漫画 ナイス';
+    window.scrollTo(0, 0);
+    preload(n + 1); preload(n - 1);
+  }
+
+  function fromHash() {
+    const m = location.hash.match(/^#(\d+)$/);
+    return m ? parseInt(m[1], 10) : 0;
+  }
+
+  function go(n) {   // 読むビューの中で話を移る(履歴は増やさない)
+    if (n < 1 || n > D.published) return;
+    history.replaceState(null, '', '#' + n);
+    show(n);
+  }
+
+  let fromList = false;  // 一覧から入ったなら「×」はブラウザの戻ると同じにする
+  window.addEventListener('hashchange', () => {
+    const n = fromHash();
+    if (!cur && n) fromList = true;
+    show(n);
+  });
+  $('close').addEventListener('click', () => {
+    if (fromList) { fromList = false; history.back(); }
+    else { history.replaceState(null, '', location.pathname + location.search); show(0); }
+  });
+  $('next').addEventListener('click', () => go(cur + 1));
+  $('prev').addEventListener('click', () => go(cur - 1));
+  document.addEventListener('keydown', (e) => {
+    if (!cur) return;
+    if (e.key === 'ArrowLeft') go(cur + 1);       // 左 = 次(漫画の向き)
+    else if (e.key === 'ArrowRight') go(cur - 1);
+    else if (e.key === 'Escape') $('close').click();
+  });
+
+  // スワイプ: 指を右へ払う = 次(左から次のページが来る)
+  let sx = 0, sy = 0, st = 0;
+  const page = $('page');
+  page.addEventListener('touchstart', (e) => { const t = e.touches[0]; sx = t.clientX; sy = t.clientY; st = Date.now(); }, { passive: true });
+  page.addEventListener('touchend', (e) => {
+    const t = e.changedTouches[0];
+    const dx = t.clientX - sx, dy = t.clientY - sy;
+    if (Date.now() - st > 700 || Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    go(dx > 0 ? cur + 1 : cur - 1);
+  }, { passive: true });
+
+  fetch('data.json', { cache: 'no-cache' }).then((r) => r.json()).then((d) => {
+    D = d;
+    renderList();
+    show(fromHash());
+  });
+})();
+</script>
+</body>
+</html>

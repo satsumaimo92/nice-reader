@@ -60,6 +60,9 @@
   .flip { position: fixed; left: 0; right: 0; bottom: 0; z-index: 2; padding: 0 16px calc(14px + env(safe-area-inset-bottom)); height: calc(88px + env(safe-area-inset-bottom)); display: flex; justify-content: space-between; align-items: center; background: linear-gradient(rgba(255,255,255,0), #fff 45%); pointer-events: none; }
   .flip button { pointer-events: auto; width: 56px; height: 56px; border-radius: 28px; border: 1px solid #ddd; background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
   .flip button:disabled { opacity: .3; cursor: default; }
+  .after { max-width: 480px; margin: 40px auto 0; padding: 0 16px; }
+  .after iframe { display: block; width: 100%; height: 118px; border: 0; }
+  .back-top { display: block; width: 210px; margin: 32px auto 0; padding: 10px 0; border: 1.5px solid var(--ink); border-radius: 4px; text-align: center; font-weight: 700; text-decoration: none; }
   @media (min-width: 720px) {
     .flip { top: 0; bottom: 0; height: auto; padding: 0; background: none; max-width: 760px; margin: 0 auto; }
     .flip button { width: 64px; height: 64px; border-radius: 32px; }
@@ -101,6 +104,10 @@
     <div class="prog"><i id="prog"></i></div>
   </div>
   <div id="page" class="page"><img id="strip" alt=""></div>
+  <div class="after">
+    <iframe src="comment.html" title="新都社にコメントを送る" scrolling="no" loading="lazy"></iframe>
+    <a class="back-top" href="https://satsumaimo.org/manga/nice">ナイスのページへ</a>
+  </div>
   <nav class="flip" aria-label="前後の話">
     <button id="next" aria-label="次の話">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
@@ -195,9 +202,14 @@
     if (!cur && n) fromList = true;
     show(n);
   });
+  // 「×」の戻り先: このページの一覧から入ったなら一覧へ。
+  // satsumaimo.org（/manga/nice のカード）から来たなら、そのページへ戻る。
+  const SITE = 'https://satsumaimo.org/';
+  const NICE = SITE + 'manga/nice';
   $('close').addEventListener('click', () => {
-    if (fromList) { fromList = false; history.back(); }
-    else { history.replaceState(null, '', location.pathname + location.search); show(0); }
+    if (fromList) { fromList = false; history.back(); return; }
+    if (document.referrer.startsWith(SITE) && history.length > 1) history.back();
+    else location.href = NICE;
   });
   $('next').addEventListener('click', () => go(cur + 1));
   $('prev').addEventListener('click', () => go(cur - 1));

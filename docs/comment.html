@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>コメント</title>
+<style>
+  html, body { margin: 0; background: transparent; }
+  body { font-family: -apple-system, 'Hiragino Kaku Gothic ProN', sans-serif; }
+  form p { margin: 0 0 10px; }
+  textarea { font-size: 16px; }
+</style>
+</head>
+<body>
+<!-- satsumaimo.org/manga/nice/nice4_latest に STUDIO の埋め込みで置いていた新都社のコメント欄と同じもの。
+     元のタグには新都社メニューの //neetsha.jp/addon/add_menu.js も入っていたが、STUDIO の埋め込みでは
+     動いておらず表示されていなかった。ここで動かすと「MENU」ボタンが入力欄に重なるので外している -->
+<!-- Neetel_Inside_Comment -->
+<script type="text/javascript">
+<!--
+var comicid = 3681;
+-->
+</script>
+<form action="https://neetsha.jp/inside/comment.php" method="post" target="_top">
+<input type="hidden" name="methodid" value="1">
+<input type="hidden" name="id" value="3681">
+<input type="hidden" name="enc" value="0">
+<p>
+<textarea name="comment" maxlength="255" style="width:95%; height:2em;" placeholder="コメント"></textarea>
+</p>
+<p>
+<input type="submit" name="submit" value="Send">
+</p>
+</form>
+<!-- Neetel_Inside_Comment -->
+</body>
+</html>

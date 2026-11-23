@@ -3,7 +3,8 @@
 50話ずつのまとまり（表紙は1話目の1コマ目）と最新回を並べた一覧と、
 1話ずつ左右にめくって読むビューの、1枚の静的ページ。
 
-- 公開URL: https://satsumaimo92.github.io/nice-reader/
+- 公開URL: https://nice.satsumaimo.org/ （DNS は FC2ドメインの CNAME nice → satsumaimo92.github.io、`docs/CNAME`）
+- satsumaimo.org/manga/nice の第4部カードは STUDIO CMS の `nice4` モデル。50話たまったら1件足す（手順は ~/Desktop/code/org/PLAN.md）
 - リポジトリ: https://github.com/satsumaimo92/nice-reader （main の `docs/` を GitHub Pages で配信）
 - 更新: 毎晩23:30に launchd（`com.satsumaimo.nice-reader`）が `update.sh` を実行する。
   build.py → 変化があればコミットして push。ログは `logs/YYYYMM.log`（git 管理外）

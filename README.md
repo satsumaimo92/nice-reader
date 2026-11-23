@@ -3,6 +3,10 @@
 50話ずつのまとまり（表紙は1話目の1コマ目）と最新回を並べた一覧と、
 1話ずつ左右にめくって読むビューの、1枚の静的ページ。
 
+- 公開URL: https://satsumaimo92.github.io/nice-reader/
+- リポジトリ: https://github.com/satsumaimo92/nice-reader （main の `docs/` を GitHub Pages で配信）
+- 更新: `build.py` を実行 → `git add -A && git commit && git push`（自動化は未設定）
+
 ## 構成
 
 ```

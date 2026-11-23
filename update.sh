@@ -22,6 +22,7 @@ GIT=/usr/bin/git
   pub=$("$PY" -I -c 'import json;print(json.load(open("docs/data.json"))["published"])')
   $GIT add -A docs &&
     $GIT commit -q -m "${pub}話まで更新（自動）" &&
+    $GIT pull -q --rebase origin main &&
     $GIT push -q origin main &&
     echo "push 済み: ${pub}話まで"
   code=$?

@@ -5,7 +5,21 @@
 
 - 公開URL: https://satsumaimo92.github.io/nice-reader/
 - リポジトリ: https://github.com/satsumaimo92/nice-reader （main の `docs/` を GitHub Pages で配信）
-- 更新: `build.py` を実行 → `git add -A && git commit && git push`（自動化は未設定）
+- 更新: 毎晩23:30に launchd（`com.satsumaimo.nice-reader`）が `update.sh` を実行する。
+  build.py → 変化があればコミットして push。ログは `logs/YYYYMM.log`（git 管理外）
+
+## 自動更新の安全策
+
+- 新都社に出た話でも、手元に素材（ストリップ）がまだ無ければ、その手前で止める
+- 新都社の読み取りに失敗するなどして公開範囲が前回より小さくなったら、何もしない
+- 変化の無い日はコミットしない
+- Mac が寝ていた・SSD が外れていた日は、次に回ったときにまとめて拾う
+
+launchd を入れ直すとき:
+
+```bash
+cp com.satsumaimo.nice-reader.plist ~/Library/LaunchAgents/ && launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.satsumaimo.nice-reader.plist
+```
 
 ## 構成
 

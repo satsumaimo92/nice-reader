@@ -55,7 +55,7 @@ reader/
 - 左ボタン / 指を右へ払う / ← キー = 次の話、右 = 前の話（漫画の向き）
 - 50話の境目もそのまま次へ続く。URL は `#962` のように1話ごと
 - × の戻り先: このページの一覧から入ったなら一覧の元の位置、satsumaimo.org（/manga/nice のカード）や直リンクから入ったなら satsumaimo.org/manga/nice
-- 各話の下に新都社のコメント欄（`docs/comment.html` を iframe で。nice4_latest の STUDIO 埋め込みと同じフォーム、作品ID 3681）と「ナイスのページへ」ボタン
+- 各話の下に新都社のコメント欄（`docs/comment.html` を iframe で。nice4_latest の STUDIO 埋め込みと同じフォーム、作品ID 3681）。戻るボタンは置かない（× と行き先が同じなので）
 
 ## 手元で見る
 

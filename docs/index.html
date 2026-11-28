@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>4コマ漫画 ナイス 第4部 | satsumaimo</title>
 <meta name="description" content="satsumaimo の4コマ漫画「ナイス」第4部（2022.4〜）のバックナンバー。">
+<!-- GA4（satsumaimo.org と同じ測定ID）。Cookie は既定の auto のままなので .satsumaimo.org に置かれ、
+     satsumaimo.org とユーザー・セッションがつながる。話ごとの計測は下のスクリプトの track()。 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T22QD7KMV4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  // satsumaimo.org のカードから来たときは参照元を付け替えない（同じサイト内の移動として扱う）
+  gtag('config', 'G-T22QD7KMV4', /^https:\/\/([^/]+\.)?satsumaimo\.org\//.test(document.referrer) ? { ignore_referrer: true } : {});
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
@@ -198,33 +208,62 @@
     return m ? parseInt(m[1], 10) : 0;
   }
 
-  function go(n) {   // 読むビューの中で話を移る(履歴は増やさない)
+  // ---- GA4: 話を開く・めくるたびに read_episode を送る ----
+  // URL は replaceState で #962 に変わるだけなので、拡張計測の page_view はあてにせず自前で送る。
+  //   episode = 話数 / block = 50話のまとまり（"951-1000"）
+  //   via = この読み始めの入口（list = このページの一覧 / card = satsumaimo.org のカード / direct = 直リンクなど）
+  //   nav = open（開いた）/ next / prev（めくった）/ jump（戻る・URL 直打ちで飛んだ）
+  // 同じページ表示の中では、1つの話は1回だけ数える（行ったり来たりしても増えない）。
+  const SITE = 'https://satsumaimo.org/';
+  let via = document.referrer.startsWith(SITE) ? 'card' : 'direct';
+  const sent = new Set();
+  function blockOf(n) {
+    const s = Math.floor((n - 1) / D.chunk) * D.chunk + 1;
+    return s + '-' + (s + D.chunk - 1);
+  }
+  function track(nav) {
+    if (!cur || sent.has(cur) || typeof gtag !== 'function') return;
+    sent.add(cur);
+    gtag('event', 'read_episode', { episode: cur, block: blockOf(cur), via: via, nav: nav });
+  }
+  // コメント欄（comment.html の iframe）から、いま読んでいる話を知るため
+  window.niceEpisode = () => (cur ? { episode: cur, block: blockOf(cur) } : {});
+
+  function go(n, nav) {   // 読むビューの中で話を移る(履歴は増やさない)
     if (n < 1 || n > D.published) return;
     history.replaceState(null, '', '#' + n);
     show(n);
+    track(nav);
   }
 
   let fromList = false;  // 一覧から入ったなら「×」はブラウザの戻ると同じにする
   window.addEventListener('hashchange', () => {
     const n = fromHash();
-    if (!cur && n) fromList = true;
+    const opening = !cur && n;
+    if (opening) { fromList = true; via = 'list'; }
     show(n);
+    track(opening ? 'open' : 'jump');
   });
   // 「×」の戻り先: このページの一覧から入ったなら一覧へ。
   // satsumaimo.org（/manga/nice のカード）から来たなら、そのページへ戻る。
-  const SITE = 'https://satsumaimo.org/';
   const NICE = SITE + 'manga/nice';
+  // GA4 はイベントを約5秒ためてから送り、別のページへ移るとためた分は消える。gtag は pagehide を受けると
+  // すぐ送るので、このページを離れる直前に投げ、送信が始まるまで少し待ってから移る（comment.html の送信も同じ）。
+  function leave(fn) {
+    try { window.dispatchEvent(new PageTransitionEvent('pagehide', { persisted: false })); } catch (_) {}
+    setTimeout(fn, 150);
+  }
   $('close').addEventListener('click', () => {
     if (fromList) { fromList = false; history.back(); return; }
-    if (document.referrer.startsWith(SITE) && history.length > 1) history.back();
-    else location.href = NICE;
+    if (document.referrer.startsWith(SITE) && history.length > 1) leave(() => history.back());
+    else leave(() => { location.href = NICE; });
   });
-  $('next').addEventListener('click', () => go(cur + 1));
-  $('prev').addEventListener('click', () => go(cur - 1));
+  $('next').addEventListener('click', () => go(cur + 1, 'next'));
+  $('prev').addEventListener('click', () => go(cur - 1, 'prev'));
   document.addEventListener('keydown', (e) => {
     if (!cur) return;
-    if (e.key === 'ArrowLeft') go(cur + 1);       // 左 = 次(漫画の向き)
-    else if (e.key === 'ArrowRight') go(cur - 1);
+    if (e.key === 'ArrowLeft') go(cur + 1, 'next');       // 左 = 次(漫画の向き)
+    else if (e.key === 'ArrowRight') go(cur - 1, 'prev');
     else if (e.key === 'Escape') $('close').click();
   });
 
@@ -236,13 +275,14 @@
     const t = e.changedTouches[0];
     const dx = t.clientX - sx, dy = t.clientY - sy;
     if (Date.now() - st > 700 || Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
-    go(dx > 0 ? cur + 1 : cur - 1);
+    if (dx > 0) go(cur + 1, 'next'); else go(cur - 1, 'prev');
   }, { passive: true });
 
   fetch('data.json', { cache: 'no-cache' }).then((r) => r.json()).then((d) => {
     D = d;
     renderList();
     show(fromHash());
+    track('open');
   });
 })();
 </script>

@@ -33,5 +33,29 @@ var comicid = 3681;
 </p>
 </form>
 <!-- Neetel_Inside_Comment -->
+<script>
+// GA4: コメントを送ったら comment_submit を送る（本文は送らない）。gtag は親ページ（同じドメインの index.html）のもの。
+// GA4 はイベントを約5秒ためてから送り、event_callback も送る前に返ってくる。送信で親ページごと新都社へ移ると
+// ためた分は送られずに消える（2026-11-28 に Chromium で確認）。gtag は pagehide を受けるとためた分をすぐ送るので、
+// イベントを積んだ直後に親ページへ pagehide を投げて吐き出させ、少し待ってから新都社へ送信する。
+(() => {
+  const form = document.querySelector('form');
+  let sending = false;
+  form.addEventListener('submit', (e) => {
+    if (sending) return;
+    let P;
+    try { P = window.parent; if (typeof P.gtag !== 'function') return; } catch (_) { return; }
+    if (!form.comment.value.trim()) return;
+    e.preventDefault();
+    sending = true;
+    try {
+      P.gtag('event', 'comment_submit', typeof P.niceEpisode === 'function' ? P.niceEpisode() : {});
+      P.dispatchEvent(typeof P.PageTransitionEvent === 'function'
+        ? new P.PageTransitionEvent('pagehide', { persisted: false }) : new P.Event('pagehide'));
+    } catch (_) {}
+    setTimeout(() => HTMLFormElement.prototype.submit.call(form), 300);
+  });
+})();
+</script>
 </body>
 </html>
